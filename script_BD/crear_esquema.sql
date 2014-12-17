@@ -3,7 +3,7 @@
 --TABLAS DE SEGURIDAD:
 
 BEGIN
-CREATE TABLE Usuarios(
+CREATE TABLE cf.Usuarios(
 	cod_usu		number(6),
 	nom_usu		char(60) NOT NULL,
 	ape_usu		char(60) NOT NULL,
@@ -21,20 +21,20 @@ CREATE TABLE Usuarios(
 	constraint pk_usuario primary key (cod_usu));
 
 
-CREATE TABLE Perfiles(
+CREATE TABLE cf.Perfiles(
 	cod_per		number(6),
 	desc_per	varchar(255) not NULL,
 	act_per		char(1) DEFAULT 'A',
 	constraint pk_perfil primary key (cod_per));
 
 
-CREATE TABLE Perfiles_x_usuario(
+CREATE TABLE cf.Perfiles_x_usuario(
 	cod_per		number(6),
 	cod_usu		number(6),
 	constraint pk_perfil_usuario primary key (cod_per,cod_usu));
 
 
-CREATE TABLE Opciones(
+CREATE TABLE cf.Opciones(
 	cod_opc				number(6),
 	cod_opc_padre		number(6),
 	desc_opc			varchar(255),
@@ -44,7 +44,7 @@ CREATE TABLE Opciones(
 	constraint pk_opcion primary key (cod_opc));
 
 
-CREATE TABLE Opciones_x_perfiles(
+CREATE TABLE cf.Opciones_x_perfiles(
 	cod_opc number(6),
 	cod_per number(6),
 	constraint pk_opcion_perfil primary key (cod_opc,cod_per));
@@ -61,7 +61,7 @@ END;
 
 ---BUSSINESS TABLES:
 
-CREATE TABLE proyecto(
+CREATE TABLE cf.proyecto(
 	cod_pro 	number(6),
 	nom_pro 	varchar(100),
 	desc_pro 	varchar(255),
@@ -77,7 +77,7 @@ CREATE TABLE proyecto(
 	constraint fk_cat foreign key (cod_cat) references categorias(cod_cat));
 
 
-CREATE TABLE recompensas(
+CREATE TABLE cf.recompensas(
 	cod_rec		number(6),
 	cod_pro		number(6),
 	nom_rec		varchar(200),
@@ -88,7 +88,7 @@ CREATE TABLE recompensas(
 
 
 
-CREATE TABLE donaciones(
+CREATE TABLE cf.donaciones(
 	cod_dona	number(6),
 	cod_pro		number(6),
 	nom_dona	char(100),
@@ -115,7 +115,7 @@ CREATE TABLE donaciones(
 
 
 
-CREATE TABLE categorias(
+CREATE TABLE cf.categorias(
 	cod_cat		number(6),
 	desc_cat	varchar(100),
 	est_cat		char(1) DEFAULT 'A',
