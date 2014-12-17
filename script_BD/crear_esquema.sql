@@ -122,7 +122,7 @@ CREATE TABLE categorias(
 	constraint pk_cat primary key (cod_cat));
 
 
-
+----------
 6. Actualizaciones
 7. Comentarios
 8. Contactos
