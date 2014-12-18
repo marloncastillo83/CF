@@ -66,7 +66,8 @@ CREATE TABLE cf.proyecto(
 	nom_pro 	varchar(100),
 	desc_pro 	varchar(255),
 	cod_usu		number(6),
-	fec_ini		date DEFAULT SYSDATE,
+	fec_crea	date DEFAULT SYSDATE,
+	fec_ini		date,
 	fec_fin		date,
 	mon_pro		binary_double,
 	cod_cat		number(6),
@@ -100,6 +101,7 @@ CREATE TABLE cf.donaciones(
 	dona_hide	char(1) DEFAULT 'N',
 	dona_recur	char(1)	DEFAULT 'N',
 	mont_dona	binary_double,
+	fec_dona	date DEFAULT SYSDATE,
 ---*Si se va a simular otras formas de pago esto debería linkearse con otra tabla ej."forma_pago"
 	num_tar		char(20),
 	mes_ven		char(2),
@@ -122,9 +124,27 @@ CREATE TABLE cf.categorias(
 	constraint pk_cat primary key (cod_cat));
 
 
-----------
-6. Actualizaciones
-7. Comentarios
-8. Contactos
-9. Multimedia
-10. paises
+
+CREATE TABLE cf.actualizaciones(
+	cod_pro		number(6),
+	fec_act		date DEFAULT SYSDATE,
+	desc_act	varchar(255),
+	pic_act		blob,
+	constraint fk_pro foreign key (cod_pro) references proyecto(cod_pro));
+
+
+CREATE TABLE cf.comentarios(
+	cod_pro		number(6),
+	fec_com		date DEFAULT SYSDATE,
+	nom_con		varchar(100),
+	mail_con	varchar(100),
+	desc_com	varchar(255),
+	constraint fk_pro foreign key (cod_pro) references proyecto(cod_pro));
+
+
+CREATE TABLE cf.paises(
+	cod_pais	number(6),
+	desc_pais	varchar(100),
+	nom_corto	char(3),
+	fec_crea	date DEFAULT SYSDATE,
+	constraint pk_pais primary key (cod_pais));
