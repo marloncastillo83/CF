@@ -21,10 +21,13 @@ CREATE TABLE cf.Usuarios(
 	constraint pk_usuario primary key (cod_usu));
 
 
-CREATE TABLE cf.Perfiles(
-	cod_per		number(6),
-	desc_per	varchar(255) not NULL,
-	act_per		char(1) DEFAULT 'A',
+----******************************************************************************
+----Estas tablas no tienen razon de ser debido a que unicamente 				**
+----los emprendedores quedaran registrados en la tabla "Usuarios"  				**
+CREATE TABLE cf.Perfiles(													--	**		
+	cod_per		number(6),													--	**
+	desc_per	varchar(255) not NULL,										--	**
+	act_per		char(1) DEFAULT 'A',										--	**
 	constraint pk_perfil primary key (cod_per));
 
 
@@ -34,22 +37,23 @@ CREATE TABLE cf.Perfiles_x_usuario(
 	constraint pk_perfil_usuario primary key (cod_per,cod_usu));
 
 
-CREATE TABLE cf.Opciones(
+CREATE TABLE cf.opciones(
 	cod_opc				number(6),
 	cod_opc_padre		number(6),
 	desc_opc			varchar(255),
 	est_opc				char(1) DEFAULT 'A',
 	fec_crea			date DEFAULT SYSDATE,
 	usu_crea			varchar(100),
-	constraint pk_opcion primary key (cod_opc));
+	constraint pk_opcion primary key (cod_opc),
+	constraint fk_opc_padre foreign key (cod_opc_padre) references cf.opciones(cod_opc));
 
-
-CREATE TABLE cf.Opciones_x_perfiles(
-	cod_opc number(6),
-	cod_per number(6),
-	constraint pk_opcion_perfil primary key (cod_opc,cod_per));
-
-COMMIT;
+																			--	***
+CREATE TABLE cf.Opciones_x_perfiles(										--	***	
+	cod_opc number(6),														--	***
+	cod_per number(6),														--	***
+	constraint pk_opcion_perfil primary key (cod_opc,cod_per));				--	***	
+--																				***					
+--COMMIT;**************************************************************************
 
 EXCEPTION 
 	WHEN OTHERS THEN
@@ -60,6 +64,8 @@ END;
 
 
 ---BUSSINESS TABLES:
+
+BEGIN
 
 CREATE TABLE cf.proyecto(
 	cod_pro 	number(6),
@@ -74,8 +80,8 @@ CREATE TABLE cf.proyecto(
 	num_fri		number(8),
 	img_pro		blob,
 	constraint pk_pro primary key (cod_pro),
-	constraint fk_user foreign key (cod_usu) references usuarios(cod_usu),
-	constraint fk_cat foreign key (cod_cat) references categorias(cod_cat));
+	constraint fk_user foreign key (cod_usu) references cf.usuarios(cod_usu),
+	constraint fk_cat foreign key (cod_cat) references cf.categorias(cod_cat));
 
 
 CREATE TABLE cf.recompensas(
@@ -85,7 +91,7 @@ CREATE TABLE cf.recompensas(
 	desc_rec	varchar(255),
 	img_rec		blob,
 	constraint pk_rec primary key (cod_rec),
-	constraint fk_pro foreign key (cod_pro) references proyecto(cod_pro));
+	constraint fk_pro foreign key (cod_pro) references cf.proyecto(cod_pro));
 
 
 
@@ -112,8 +118,8 @@ CREATE TABLE cf.donaciones(
 	mail_cob	varchar(255),
 ---*******************************************************************************************
 	constraint pk_dona primary key (cod_dona),
-	constraint fk_pro foreign key (cod_pro) references proyecto(cod_pro),
-	constraint fk_pais foreign key (cod_pais) references paises(cod_pais));
+	constraint fk_pro foreign key (cod_pro) references cf.proyecto(cod_pro),
+	constraint fk_pais foreign key (cod_pais) references cf.paises(cod_pais));
 
 
 
@@ -130,7 +136,7 @@ CREATE TABLE cf.actualizaciones(
 	fec_act		date DEFAULT SYSDATE,
 	desc_act	varchar(255),
 	pic_act		blob,
-	constraint fk_pro foreign key (cod_pro) references proyecto(cod_pro));
+	constraint fk_pro foreign key (cod_pro) references cf.proyecto(cod_pro));
 
 
 CREATE TABLE cf.comentarios(
@@ -139,7 +145,7 @@ CREATE TABLE cf.comentarios(
 	nom_con		varchar(100),
 	mail_con	varchar(100),
 	desc_com	varchar(255),
-	constraint fk_pro foreign key (cod_pro) references proyecto(cod_pro));
+	constraint fk_pro foreign key (cod_pro) references cf.proyecto(cod_pro));
 
 
 CREATE TABLE cf.paises(
@@ -148,3 +154,24 @@ CREATE TABLE cf.paises(
 	nom_corto	char(3),
 	fec_crea	date DEFAULT SYSDATE,
 	constraint pk_pais primary key (cod_pais));
+
+
+CREATE TABLE cf.votaciones(
+	cod_vota	number(6),
+	cod_pro		number(6),
+	nom_vota	varchar(100),
+	mail_vota	varchar(100),
+	comen_vota	varchar(255),
+	cod_pais	number(6),
+	fec_vota	date DEFAULT SYSDATE,
+	constraint pk_vota primary key (cod_vota),
+	constraint fk_pro foreign key (cod_pro) references cf.proyecto(cod_pro),
+	constraint fk_pais foreign key (cod_pais) references cf.paises(cod_pais));
+
+
+
+EXCEPTION 
+	WHEN OTHERS THEN
+		ROLLBACK;
+		RAISE_APPLICATION_ERROR(-20001,'ERROR AL CREAR ESQUEMA ',SQLCODE);
+END;
